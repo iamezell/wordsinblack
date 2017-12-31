@@ -15,8 +15,9 @@ public class CategoryInfo
 	public string			name;			// Name of the category, used in filename, should be unique
 	public string			displayName;	// Name that is displayed in the UI
 	public string			description;	// Short description, can be anything
-	public Sprite			icon;			// An icon that goes with the category
+    public Sprite			icon;			// An icon that goes with the category
 	public List<LevelInfo>	levelInfos;		// The list of levels in this category
+    public List<levelClue>  levelClues;		// The list of levels in this category
 }
 
 /// <summary>
@@ -26,6 +27,15 @@ public class CategoryInfo
 public class LevelInfo
 {
 	public string[]	words = null;
+}
+
+/// <summary>
+/// Holds information about each clue in the game.
+/// </summary>
+[System.Serializable]
+public class levelClue
+{
+    public string[] words = null;
 }
 
 public class GameManager : SingletonComponent<GameManager>
@@ -139,7 +149,8 @@ public class GameManager : SingletonComponent<GameManager>
 				dailyPuzzleInfo.name		= dailyPuzzleId;
 				dailyPuzzleInfo.icon		= dailyPuzzleIcon;
 				dailyPuzzleInfo.levelInfos	= dailyPuzzles;
-			}
+
+            }
 
 			return dailyPuzzleInfo;
 		}

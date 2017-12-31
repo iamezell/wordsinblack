@@ -70,5 +70,13 @@ public class UIScreenGame : UIScreen
 		}
 	}
 
+    public void onClueClicked ()
+    {
+        if (!GameManager.Instance.AnimatingWord)
+        {
+            UIScreenController.Instance.Show(UIScreenController.ClueScreenId, false, true, true);
+        }
+    } 
+
 	#endregion
 }

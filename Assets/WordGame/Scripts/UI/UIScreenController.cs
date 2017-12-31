@@ -19,9 +19,10 @@ public class UIScreenController : SingletonComponent<UIScreenController>
 	public const string CategoryLevelsScreenId	= "category_levels";
 	public const string GameScreenId			= "game";
 	public const string CompleteScreenId		= "complete";
+    public const string ClueScreenId = "clue";
 
-	// The screen that is currently being shown
-	private UIScreen	currentUIScreen;
+    // The screen that is currently being shown
+    private UIScreen	currentUIScreen;
 	private bool		isAnimating;
 
 	#endregion

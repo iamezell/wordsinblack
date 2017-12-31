@@ -70,7 +70,7 @@ public class GameManagerEditor : Editor
 		{
 			SerializedProperty categoryInfo = categoryInfos.GetArrayElementAtIndex(i);
 			SerializedProperty name			= categoryInfo.FindPropertyRelative("name");
-			SerializedProperty displayName	= categoryInfo.FindPropertyRelative("displayName");
+            SerializedProperty displayName	= categoryInfo.FindPropertyRelative("displayName");
 
 			// If the displayName is not set but the name is then set the displayName to the name
 			if (string.IsNullOrEmpty(displayName.stringValue) && !string.IsNullOrEmpty(name.stringValue))
@@ -136,11 +136,12 @@ public class GameManagerEditor : Editor
 					EditorGUILayout.PropertyField(nameProperty);
 					EditorGUILayout.PropertyField(categoryInfo.FindPropertyRelative("displayName"));
 					EditorGUILayout.PropertyField(categoryInfo.FindPropertyRelative("description"));
-					EditorGUILayout.PropertyField(categoryInfo.FindPropertyRelative("icon"));
+                    EditorGUILayout.PropertyField(categoryInfo.FindPropertyRelative("icon"));
 					
 					DrawCategoryLevelInfos(categoryInfo);
-					
-					EditorGUI.indentLevel--;
+                    DrawCategoryLevelClues(categoryInfo);
+
+                    EditorGUI.indentLevel--;
 				}
 			}
 			
@@ -156,9 +157,66 @@ public class GameManagerEditor : Editor
 		EditorGUILayout.PropertyField(levelInfos, false);
 
 		DrawLevelInfos(levelInfos, "Level");
-	}
+    }
 
-	private void DrawLevelInfos(SerializedProperty levelInfos, string prefix)
+    private void DrawCategoryLevelClues(SerializedProperty categoryInfo)
+    {
+        SerializedProperty levelClues = categoryInfo.FindPropertyRelative("levelClues");
+
+        // Draw the levelInfos but not its children, this will just draw the foldout (little arrow thingy)
+        EditorGUILayout.PropertyField(levelClues, false);
+
+        DrawLevelClues(levelClues, "Level");
+    }
+
+    private void DrawLevelClues(SerializedProperty levelClues, string prefix)
+    {
+        // If its expanded then draw its children
+        if (levelClues.isExpanded)
+        {
+            EditorGUI.indentLevel++;
+
+            // Draw the "Size" property for the levelInfos array
+            EditorGUILayout.PropertyField(levelClues.FindPropertyRelative("Array.size"));
+
+            // Draw each of the LevelInfos
+            for (int i = 0; i < levelClues.arraySize; i++)
+            {
+                SerializedProperty levelClue = levelClues.GetArrayElementAtIndex(i);
+
+                EditorGUILayout.BeginHorizontal();
+
+                // Draw the foldout for the LevelInfo
+                EditorGUILayout.PropertyField(levelClue, new GUIContent(prefix + " " + (i + 1) + " Words"), false);
+
+                bool deleted = false;
+
+                // Draw the remove button so you can remove elements in the middle of the list
+                if (GUILayout.Button("-", GUILayout.Width(20), GUILayout.Height(14)))
+                {
+                    levelClues.DeleteArrayElementAtIndex(i);
+                    deleted = true;
+                }
+
+                EditorGUILayout.EndHorizontal();
+
+                // If its not deleted and is expanded
+                if (!deleted && levelClue.isExpanded)
+                {
+                    EditorGUI.indentLevel++;
+
+                    //DrawLevelInfoWords(levelClue);
+                    DrawLevelClueText(levelClue);
+
+                    EditorGUI.indentLevel--;
+                }
+            }
+
+            EditorGUI.indentLevel--;
+        }
+    }
+
+    private void DrawLevelInfos(SerializedProperty levelInfos, string prefix)
 	{
 		// If its expanded then draw its children
 		if (levelInfos.isExpanded)
@@ -229,7 +287,14 @@ public class GameManagerEditor : Editor
 		}
 	}
 
-	private void DrawDailyPuzzleLevels()
+    private void DrawLevelClueText(SerializedProperty levelClue)
+    {
+        //SerializedProperty levelClues = levelClue.FindPropertyRelative("words");
+        EditorGUILayout.TextArea("value");
+     
+    }
+
+    private void DrawDailyPuzzleLevels()
 	{
 		SerializedProperty dailyPuzzles = serializedObject.FindProperty("dailyPuzzles");
 

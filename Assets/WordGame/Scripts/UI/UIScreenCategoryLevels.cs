@@ -50,7 +50,7 @@ public class UIScreenCategoryLevels : UIScreen
 	public void OnBackClicked()
 	{
 		// Go back to main screen
-		UIScreenController.Instance.Show(UIScreenController.CategoriesScreenId, true);
+		UIScreenController.Instance.Show(UIScreenController.CategoriesScreenId, false);
 	}
 	
 	#endregion
